@@ -44,7 +44,7 @@ if os.path.exists('Backgrounds/bg.config'):
 	print("Exist and read")
 else:
 	print("Creating config...")
-	config['DEFAULT'] = {'wallpaper': '0'}
+	config['DEFAULT'] = {'wallpaper': '0','state': 'disable'}
 	with open(user_path+'/Backgrounds/bg.config', 'w+') as configfile:
 		config.write(configfile)
 
@@ -85,16 +85,22 @@ def set_enable(xvar):
 		print("Removing from crontab...")
 	if cronsetup==False and xvar.get()==0:
 		print("Nothing changed bc it's already disable")
-		
+
+
 def push(xvar, zvar):
 	print(xvar.get())
 	print(zvar.get())
 	set_enable(xvar)
+	if xvar.get() == 0:
+		config.set('DEFAULT', 'state', 'disable')
+	if xvar.get() == 1:
+		config.set('DEFAULT', 'state', 'enable')
 	config.set('DEFAULT', 'wallpaper', str(zvar.get()))
 	with open('Backgrounds/bg.config', 'w') as configfile:
 		config.write(configfile)
 	if xvar.get() == 1:
 		os.system('python3 Backgrounds/change_theme.py')
+	sys.exit(0)
 	
 class Window:
 
@@ -122,12 +128,12 @@ class Window:
 		radioframe = Frame(mainframe)
 		radioframe.pack(fill=X, pady=15)
 		
-		option_enable = Radiobutton(radioframe, text="Enable", variable=var, value=1)
+		option_enable = Radiobutton(radioframe, text="Enable", variable=var, value=1, command=lambda:setstate())
 		option_enable.pack(side=LEFT)
 		
-		option_disable = Radiobutton(radioframe, text="Disable", variable=var, value=0)
+		option_disable = Radiobutton(radioframe, text="Disable", variable=var, value=0, command=lambda:setstate())
 		option_disable.pack(side=LEFT)
-		
+
 		wallpaperframe=Frame(mainframe, bg="White", highlightthickness=1, highlightbackground="gray")
 		wallpaperframe.pack(fill=X)
 		
@@ -146,7 +152,7 @@ class Window:
 		
 		option_BigSur = Radiobutton(wallpaperframe, variable=var2, value=1,  bg="White")
 		option_BigSur.grid(row=2, column=0, pady=10)
-		option_BigSur.select()
+
 		
 		CatalinaLabel = tk.Label(wallpaperframe, text="Catalina", font=("TkDefaultFont", 11, "bold"), bg="White")
 		CatalinaLabel.grid(row=0, column=1, pady=10)
@@ -175,13 +181,33 @@ class Window:
 		
 		option_Mojave = Radiobutton(wallpaperframe, variable=var2, value=3, bg="White")
 		option_Mojave.grid(row=2, column=2, pady=10)
-		#photo2 = PhotoImage(file = r""+user_path+"/Backgrounds/preview/CatalinaPreview.png") 
-		#option_Catalina = Radiobutton(wallpaperframe, text="Catalina", variable=var2, value=2, #command=switch_wallpaper, font=("TkDefaultFont", 11, "bold"), compound=TOP, image=photo2)
-		#option_Catalina.pack(side=LEFT,padx=10, pady=5)
 		
-		#photo3 = PhotoImage(file = r""+user_path+"/Backgrounds/preview/MojavePreview.png") 
-		#option_Mojave = Radiobutton(wallpaperframe,  variable=var2, value=3, command=switch_wallpaper, font=("TkDefaultFont", 11, "bold"), text="Mojave", image=photo3, compound=TOP)
-		#option_Mojave.pack(side=LEFT, padx=10, pady=5)
+		x = config['DEFAULT']['wallpaper']
+		if int(x) == 1:
+			option_BigSur.select()
+		elif int(x) == 2:
+			option_Catalina.select()
+		elif int(x) == 3:
+			option_Mojave.select()
+			
+		z = config['DEFAULT']['state']
+		if z == 'disable':
+			option_disable.select()
+			option_BigSur.config(state=DISABLED)
+			option_Catalina.config(state=DISABLED)
+			option_Mojave.config(state=DISABLED)
+		else:
+			option_enable.select()
+		
+		def setstate():
+			if var.get() == 0:
+				option_BigSur.config(state=DISABLED)
+				option_Catalina.config(state=DISABLED)
+				option_Mojave.config(state=DISABLED)
+			else:
+				option_BigSur.config(state=NORMAL)
+				option_Catalina.config(state=NORMAL)
+				option_Mojave.config(state=NORMAL)
 		
 		wButton = Button(mainframe, text="Save and Close", bg="#2866F8", fg="White", font=("TkDefaultFont", 11, "bold"), cursor="hand2", activebackground="Blue", activeforeground="White", command=lambda:push(var, var2))
 		wButton.pack(anchor='e', pady=30)
