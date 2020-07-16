@@ -128,10 +128,10 @@ class Window:
 		radioframe = Frame(mainframe)
 		radioframe.pack(fill=X, pady=15)
 		
-		option_enable = Radiobutton(radioframe, text="Enable", variable=var, value=1, command=lambda:setstate())
+		option_enable = Radiobutton(radioframe, text="Enable", variable=var, value=1, command=lambda:setstate(), cursor="hand2")
 		option_enable.pack(side=LEFT)
 		
-		option_disable = Radiobutton(radioframe, text="Disable", variable=var, value=0, command=lambda:setstate())
+		option_disable = Radiobutton(radioframe, text="Disable", variable=var, value=0, command=lambda:setstate(), cursor="hand2")
 		option_disable.pack(side=LEFT)
 
 		wallpaperframe=Frame(mainframe, bg="White", highlightthickness=1, highlightbackground="gray")
@@ -150,7 +150,7 @@ class Window:
 		img_label.image = img
 		img_label.grid(row=1, column=0, padx=15)
 		
-		option_BigSur = Radiobutton(wallpaperframe, variable=var2, value=1,  bg="White")
+		option_BigSur = Radiobutton(wallpaperframe, variable=var2, value=1,  bg="White", cursor="hand2")
 		option_BigSur.grid(row=2, column=0, pady=10)
 
 		
@@ -164,7 +164,7 @@ class Window:
 		img_label2.image = img2
 		img_label2.grid(row=1, column=1, padx=15)
 		
-		option_Catalina = Radiobutton(wallpaperframe, variable=var2, value=2, bg="White")
+		option_Catalina = Radiobutton(wallpaperframe, variable=var2, value=2, bg="White", cursor="hand2")
 		option_Catalina.grid(row=2, column=1, pady=10)
 		
 		
@@ -179,7 +179,7 @@ class Window:
 		img_label3.image = img3
 		img_label3.grid(row=1, column=2, padx=15)
 		
-		option_Mojave = Radiobutton(wallpaperframe, variable=var2, value=3, bg="White")
+		option_Mojave = Radiobutton(wallpaperframe, variable=var2, value=3, bg="White", cursor="hand2")
 		option_Mojave.grid(row=2, column=2, pady=10)
 		
 		x = config['DEFAULT']['wallpaper']
