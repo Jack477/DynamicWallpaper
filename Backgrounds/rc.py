@@ -9,10 +9,10 @@ def set_rc(x):
 	lines = fin.readlines()
 	if x == 'T':
 		print("setting up in rc.local")
-		lines[-2] = "sudo python3 "+sys.argv[2]+"/Backgrounds/change_theme.py &\n"
+		lines[-2] = sys.argv[2]+"/Backgrounds/change_theme.py &\n"
 	if x == 'F':
 		print("disable rc.local")
-		if "sudo python3" in lines[-2]:
+		if "change_theme" in lines[-2]:
 			lines[-2] = "\n"
 	open(rc_path, 'w').writelines(lines)
 set_rc(sys.argv[1])
