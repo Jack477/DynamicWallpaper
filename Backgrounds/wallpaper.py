@@ -25,6 +25,28 @@ from PIL import Image, ImageTk
 from os.path import expanduser
 from tkinter import messagebox as msb
 
+
+dynamic_wallpaper_path = " ${HOME}/Backgrounds/main/xwallpaper.jpg"
+default_path = " /usr/share/rpd-wallpaper/raspbian-x-nighthawk.png"
+### List of all xfce desktop enviroments
+commands = ["xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor1/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorHDMI/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorHDMI1/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorHDMI2/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorHDMI-1/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorHDMI-2/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorVirtual1/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitoreDP/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitoreDP1/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitoreDP2/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitoreDP-1/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitoreDP-2/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorLVDS/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorLVDS1/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorLVDS2/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorLVDS-1/workspace0/last-image -s",
+"xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorLVDS-2/workspace0/last-image -s"]
 user_path = expanduser("~")
 
 print(user_path)
@@ -36,7 +58,21 @@ BigSur = ["BigSur2.jpg", "BigSur3.jpg", "BigSur4.jpg", "BigSur5.jpg", "BigSur6.j
 Catalina = ["Catalina2.jpg", "Catalina3.jpg", "Catalina4.jpg", "Catalina5.jpg", "Catalina6.jpg", "Catalina7.jpg", "Catalina8.jpg", "Catalina1.jpg"]
 Mojave = ["Mojave2.jpg", "Mojave3.jpg", "Mojave4.jpg", "Mojave5.jpg", "Mojave6.jpg", "Mojave7.jpg", "Mojave8.jpg", "Mojave1.jpg"]
 
+### TwisterOS wallpapers
 
+twist_themes = [".iraspbian.twid", ".iraspbian-dark.twid", ".raspbian7.twid", ".nighthawk.twid", ".raspbianx.twid", ".raspbianxp.twid", ".twisteros.twid", ".raspbian95.twid"]
+twist_wp = ["CatalinaRecreation.jpg", "CatalinaRecreation.jpg", "Raspbian7.png", "raspbian-x-nighthawk.png", "raspbian-x-nighthawk.png", "RaspbianXP.jpg", "TwisterOS.png", "Clouds.png"]
+
+def set_twist_wp():
+	for theme in twist_themes:
+		if os.path.exists(str(user_path)+"/"+theme):
+			print("works")
+			theme_index = twist_themes.index(theme)
+			print("Setting up as "+twist_wp[theme_index])
+			for xcommand in commands:
+				os.system(xcommand+" /usr/share/backgrounds/"+twist_wp[theme_index])
+	
+		
 
 config = configparser.ConfigParser()
 if os.path.exists('Backgrounds/bg.config'):
@@ -50,38 +86,31 @@ else:
 
 
 def set_enable(xvar):
-	autostartsetup=False
 	cronsetup=False
 	crontext = sp.getoutput('crontab -l')
-	autostart = open("/etc/rc.local", 'r')
-	autostart_data = autostart.read()
-	if "change_theme" in autostart_data:
-		autostartsetup=True
-		print("I found change_theme.py in autostart setup!")
+
 	if "change_theme" in crontext:
 		cronsetup=True
 		print("I found change_theme.py!")
 		
 	print(cronsetup)
-	print(autostartsetup)
+
 	
 	if cronsetup==True and xvar.get()==1:
 		print("Dont change crontable bc it's already enabled")
 	if cronsetup==False and xvar.get()==1:
-		os.system('crontab -l | { cat; echo "0 * * * * sudo -H -u pi bash -c \'python3 Backgrounds/change_theme.py\' >> /home/pi/wallpaper_log.txt"; } | crontab -')
-		os.system('sudo python3 '+user_path+'/Backgrounds/rc.py T '+user_path)
-		#rc.set_rc(True)
-		#os.system('sudo sed -i "`wc -l < /etc/rc.local`i\\sudo python3 /home/pi/Backgrounds/change_theme.py &\\" /etc/rc.local')
+		os.system('crontab -l | { cat; echo "0 * * * * sudo -H -u $USER bash -c \'python3 Backgrounds/change_theme.py\'"; } | crontab -')
 		os.system('sudo service cron restart')
-		os.system('xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s ${HOME}/Backgrounds/main/xwallpaper.jpg')
+		for xcommand in commands:
+			os.system(xcommand+dynamic_wallpaper_path)
 		print("Setup crontab...")
 	if cronsetup==True and xvar.get()==0:
 		print("Removing")
 		os.system('crontab -l | grep -v \'change_theme\' | crontab -')
 		os.system('sudo service cron restart')
-		os.system('sudo python3 '+user_path+'/Backgrounds/rc.py F')
-		os.system('sudo sed -i \'s/sudo python3.*//\' /etc/rc.local')
-		os.system('xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s /usr/share/rpd-wallpaper/raspbian-x-nighthawk.png')
+		set_twist_wp()
+		#for xcommand in commands:
+		#	os.system(xcommand+default_path)
 		print("Removing from crontab...")
 	if cronsetup==False and xvar.get()==0:
 		print("Nothing changed bc it's already disable")
@@ -115,7 +144,8 @@ class Window:
 		p2=False
 		master.geometry("800x450")
 		master.title("Wallpaper")
-
+		icon = PhotoImage(file = user_path+"/Backgrounds/icon.png")
+		master.iconphoto(True, icon)
 		mainframe = Frame(master)
 		mainframe.pack(padx=10, pady=10)	
 		
