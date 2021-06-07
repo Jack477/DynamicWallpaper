@@ -1,18 +1,8 @@
 #!/usr/bin/python3
-# TODO:
-# 1. move /Backgrounds into /usr/share/backgrounds
-# 2. !DONE use user variable ${HOME} to get path and rewrite all paths
-# 3. !DONE configure cron to run script on specify hours
-# 4. !DONE MAKE GUI!
-# 5. finish logical layer of this app
-# 5a. add/remove stuff from /etc/rc.local
-# 6. some config in future? configparser could be usefull
-
 
 # COMMANDS
 #sudo -H -u pi bash -c 'python3 wallpaper.py'
 #xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s /home/pi/Backgrounds/main/xwallpaper.jpg
-
 
 import os
 import datetime
@@ -47,11 +37,9 @@ commands = ["xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspa
 "xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorLVDS2/workspace0/last-image -s",
 "xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorLVDS-1/workspace0/last-image -s",
 "xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorLVDS-2/workspace0/last-image -s"]
-user_path = expanduser("~")
 
-print(user_path)
+user_path = expanduser("~")
 sys_date = datetime.datetime.now().time()
-#print(sys_date.hour)
 
 ### List of all images as arrays
 BigSur = ["BigSur2.jpg", "BigSur3.jpg", "BigSur4.jpg", "BigSur5.jpg", "BigSur6.jpg", "BigSur7.jpg", "BigSur8.jpg", "BigSur1.jpg"]
@@ -130,8 +118,19 @@ def push(xvar, zvar):
 	if xvar.get() == 1:
 		os.system('python3 Backgrounds/change_theme.py')
 	sys.exit(0)
-	
+
 class Window:
+	def __init__(self):
+		self = tk.Tk()
+		self.title("Dynamic Wallpaper")
+		icon = PhotoImage(file = user_path+"/DynamicWallpaper/icon.png")
+		self.iconphoto(True, icon)
+		self.geometry("800x450")
+		mainframe = Frame(self)
+		mainframe.pack(padx=10, pady=10)
+
+
+class Window2:
 
 	def __init__(master):
 		
