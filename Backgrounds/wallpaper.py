@@ -17,6 +17,7 @@
 import os
 import sys
 import datetime
+import subprocess
 import configparser
 import tkinter as tk
 import subprocess as sp
@@ -31,11 +32,12 @@ dynamic_wallpaper_path = " ${HOME}/Backgrounds/main/xwallpaper.jpg"
 default_path = " /usr/share/backgrounds/raspbian-x-nighthawk.png"
 ### List of all xfce desktop enviroments
 
-channels = os.system('xfconf-query -c xfce4-desktop -l | grep last-image')
+channels = subprocess.check_output(['xfconf-query -c xfce4-desktop -l | grep last-image'], shell=True)
+#os.system('xfconf-query -c xfce4-desktop -l | grep last-image')
 
 user_path = expanduser("~")+'/Backgrounds'
 
-print(user_path)
+#print(user_path)
 sys_date = datetime.datetime.now().time()
 #print(sys_date.hour)
 
@@ -97,7 +99,7 @@ def set_enable(xvar):
 		#os.system('sudo service cron restart')
 		set_twist_wp()
 		#for xcommand in commands:
-		#	os.system(xcommand+default_path)
+		#os.system(xcommand+default_path)
 		print("Removing from crontab...")
 	if cronsetup==False and xvar.get()==0:
 		print("Nothing changed bc it's already disable")
@@ -164,7 +166,7 @@ class Window:
 		icon = PhotoImage(file = user_path+"/icon.png")
 		master.iconphoto(True, icon)
 		mainframe = Frame(master)
-		mainframe.pack(padx=10, pady=10)	
+		mainframe.pack(padx=10, pady=10)
 		
 		titleframe = Frame(mainframe)
 		titleframe.pack(fill=X)
@@ -172,7 +174,7 @@ class Window:
 		title_label = tk.Label(titleframe, text="Dynamic Wallpaper", font=("TkDefaultFont", 11, "bold"))
 		title_label.pack(side=LEFT)
 
-		selframe = Frame(mainframe)		
+		selframe = Frame(mainframe)
 		selframe.pack(fill=X, pady=15)
 
 		radioframe = Frame(selframe)
@@ -194,11 +196,11 @@ class Window:
 		option_disloc.pack(side=LEFT)
 
 		option_lat = Entry(locframe, text="Latitude", textvariable=varLat, cursor="xterm")
-		option_lat.insert(END, varLat)		
+		option_lat.insert(END, varLat)
 		option_lat.pack(side=LEFT)
 
-		option_lon = Entry(locframe, text="Longtitude", textvariable=varLon, cursor="xterm")		
-		option_lon.insert(END, varLon)		
+		option_lon = Entry(locframe, text="Longtitude", textvariable=varLon, cursor="xterm")
+		option_lon.insert(END, varLon)
 		option_lon.pack(side=LEFT)
 		
 		wallpaperframe=Frame(mainframe, bg="White", highlightthickness=1, highlightbackground="gray")
@@ -208,7 +210,7 @@ class Window:
 		BigSurLabel.grid(row=0, column=0, pady=10)
 		
 		loadimg = Image.open(user_path+"/preview/BigSurPreview.png")
-		img = ImageTk.PhotoImage(image=loadimg)       
+		img = ImageTk.PhotoImage(image=loadimg)
 		img_label = tk.Label ( wallpaperframe, image=img, bg="White")
 		
 		img_label.image = img
@@ -222,7 +224,7 @@ class Window:
 		CatalinaLabel.grid(row=0, column=1, pady=10)
 		
 		loadimg2 = Image.open(user_path+"/preview/CatalinaPreview.png")
-		img2 = ImageTk.PhotoImage(image=loadimg2)       
+		img2 = ImageTk.PhotoImage(image=loadimg2)
 		img_label2 = tk.Label ( wallpaperframe, image=img2, bg="White")
 		
 		img_label2.image = img2
@@ -235,7 +237,7 @@ class Window:
 		MojaveLabel.grid(row=0, column=2, pady=10)
 		
 		loadimg3 = Image.open(user_path+"/preview/MojavePreview.png")
-		img3 = ImageTk.PhotoImage(image=loadimg3)       
+		img3 = ImageTk.PhotoImage(image=loadimg3)
 		img_label3 = tk.Label ( wallpaperframe, image=img3, bg="White")
 		
 		img_label3.image = img3
@@ -321,4 +323,4 @@ def main():
 	
 	
 if __name__ == '__main__':
-    main()
+	main()
