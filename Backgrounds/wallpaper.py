@@ -17,7 +17,6 @@
 import os
 import sys
 import datetime
-import subprocess
 import configparser
 import tkinter as tk
 import subprocess as sp
@@ -30,9 +29,9 @@ from tkinter import messagebox as msb
 
 dynamic_wallpaper_path = " ${HOME}/Backgrounds/main/xwallpaper.jpg"
 default_path = " /usr/share/backgrounds/raspbian-x-nighthawk.png"
-### List of all xfce desktop enviroments
 
-channels = subprocess.getoutput('xfconf-query -c xfce4-desktop -l | grep last-image').split('\n')
+### List of all xfce desktop enviroments
+channels = sp.getoutput('xfconf-query -c xfce4-desktop -l | grep last-image').split('\n')
 user_path = expanduser("~")+'/Backgrounds'
 
 #print(user_path)
@@ -89,7 +88,7 @@ def set_enable(xvar):
 		#https://stackoverflow.com/questions/10193788/restarting-cron-after-changing-crontab-file
 		#os.system('sudo service cron restart')
 		for channel in channels:
-			os.system('xfconf-query -c xfce4-desktop -p '+channel+' -s '+dynamic_wallpaper_path)			
+			os.system('xfconf-query -c xfce4-desktop -p '+channel+' -s '+dynamic_wallpaper_path)
 		print("Setup crontab...")
 	if cronsetup==True and xvar.get()==0:
 		print("Removing")
@@ -137,7 +136,6 @@ class Window:
 
 	def __init__(master):
 		
-
 		master = tk.Tk()
 		
 		var    = IntVar()
@@ -187,17 +185,28 @@ class Window:
 		option_disable = Radiobutton(radioframe, text="Disable", variable=var, value=0, command=lambda:setstate(), cursor="hand2")
 		option_disable.pack(side=LEFT)
 
-		option_enaloc = Radiobutton(locframe, text="Default Location", variable=varLoc, value=True, command=lambda:setloc(), cursor="hand2")
+		option_enaloc = Radiobutton(locframe, text="Default Switch", variable=varLoc, value=True, command=lambda:setloc(), cursor="hand2")
 		option_enaloc.pack(side=LEFT)
 		
 		option_disloc = Radiobutton(locframe, text="Custom Location", variable=varLoc, value=False, command=lambda:setloc(), cursor="hand2")
 		option_disloc.pack(side=LEFT)
-
-		option_lat = Entry(locframe, text="Latitude", textvariable=varLat, cursor="xterm")
+		
+		lbl_fill1 = Label(locframe, text="", padx=16)
+		lbl_fill1.pack(side=LEFT)
+		
+		lbl_lat = Label(locframe, text="Lat:", padx=4)
+		lbl_lat.pack(side=LEFT)
+		
+		option_lat = Entry(locframe, text="Latitude", textvariable=varLat, cursor="xterm", width=9)
 		option_lat.insert(END, varLat)
 		option_lat.pack(side=LEFT)
-
-		option_lon = Entry(locframe, text="Longtitude", textvariable=varLon, cursor="xterm")
+		
+		lbl_fill2 = Label(locframe, text="", padx=8)
+		lbl_fill2.pack(side=LEFT)
+		
+		lbl_lon = Label(locframe, text="Lon:", padx=4)
+		lbl_lon.pack(side=LEFT)
+		option_lon = Entry(locframe, text="Longtitude", textvariable=varLon, cursor="xterm", width=9)
 		option_lon.insert(END, varLon)
 		option_lon.pack(side=LEFT)
 		
@@ -313,8 +322,7 @@ class Window:
 				activebackground="Blue", activeforeground="White",
 				command=lambda:push(var, var2, not varLoc.get(), option_lat.get(), option_lon.get()))
 		wButton.pack(anchor='e', pady=30)
-		master.mainloop()	
-		
+		master.mainloop()
 		
 def main():
 	start = Window()
