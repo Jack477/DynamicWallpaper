@@ -110,7 +110,7 @@ def f(images):
 	# Again, times _MUST_ be in UTC
 	geo.date = datetime.utcnow()
 	
-	# Debug output for calculates transitions
+	# Debug output for calculated transitions
 	print(geo.date, '<-- UTC its now code -->', get_code(geo.date))
 	print('\n',
 		'0 ', beg_civ, get_code(beg_civ), '\n',
@@ -128,35 +128,35 @@ def f(images):
 	# And make final decision with theme setting.
 	if   ( (curr >= get_code(beg_civ)) and (curr < get_code(sunrise)) ):
 		set_theme(images[0])
-		print('0 - Twilight sunrise')
+		print('0 - Twilight sunrise, next in', get_code(sunrise)-curr, 'minutes.')
 	
 	elif ( (curr >= get_code(sunrise)) and (curr < get_code(morning)) ):
 		set_theme(images[1])
-		print('1 - Sunrise')
+		print('1 - Sunrise, next in', get_code(morning)-curr, 'minutes.')
 	
 	elif ( (curr >= get_code(morning)) and (curr < get_code(noon))    ):
 		set_theme(images[2])
-		print('2 - Morning')
+		print('2 - Morning, next in', get_code(noon)-curr, 'minutes.')
 	
 	elif ((curr >= get_code(noon))     and (curr < get_code(evening)) ):
 		set_theme(images[3])
-		print('3 - Noon')
+		print('3 - Noon, next in', get_code(evening)-curr, 'minutes')
 	
 	elif ((curr >= get_code(evening))  and (curr < get_code(sunset))  ):
 		set_theme(images[4])
-		print('4 - Evening')
+		print('4 - Evening, next in', get_code(sunset)-curr, 'minutes.')
 	
 	elif ( (curr >= get_code(sunset))  and (curr < get_code(end_civ)) ):
 		set_theme(images[5])
-		print('5 - Sunset')
+		print('5 - Sunset, next in', get_code(end_civ)-curr, 'minutes.')
 	
 	elif ( (curr >= get_code(end_civ)) and (curr < get_code(dark))    ):
 		set_theme(images[6])
-		print('6 - Twilight sunset')
+		print('6 - Twilight sunset, next in', get_code(dark)-curr, 'minutes.')
 	
 	else :
 		set_theme(images[7])
-		print('7 - Night')
+		print('7 - Night...' )
 
 ## main script
 if int(xwallpaper)==1:

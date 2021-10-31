@@ -32,9 +32,7 @@ dynamic_wallpaper_path = " ${HOME}/Backgrounds/main/xwallpaper.jpg"
 default_path = " /usr/share/backgrounds/raspbian-x-nighthawk.png"
 ### List of all xfce desktop enviroments
 
-channels = subprocess.check_output(['xfconf-query -c xfce4-desktop -l | grep last-image'], shell=True)
-#os.system('xfconf-query -c xfce4-desktop -l | grep last-image')
-
+channels = subprocess.getoutput('xfconf-query -c xfce4-desktop -l | grep last-image').split('\n')
 user_path = expanduser("~")+'/Backgrounds'
 
 #print(user_path)
@@ -91,7 +89,7 @@ def set_enable(xvar):
 		#https://stackoverflow.com/questions/10193788/restarting-cron-after-changing-crontab-file
 		#os.system('sudo service cron restart')
 		for channel in channels:
-			os.system('xfconf-query -c xfce4-desktop -p ' + channel + '-s '+dynamic_wallpaper_path)			
+			os.system('xfconf-query -c xfce4-desktop -p '+channel+' -s '+dynamic_wallpaper_path)			
 		print("Setup crontab...")
 	if cronsetup==True and xvar.get()==0:
 		print("Removing")
